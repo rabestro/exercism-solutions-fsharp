@@ -4,7 +4,6 @@ module Clock
 let private minutesPerHour = 60
 [<Literal>]
 let private hoursPerDay = 24
-
 [<Literal>]
 let private minutesPerDay = minutesPerHour * hoursPerDay
 
