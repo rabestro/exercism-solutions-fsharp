@@ -15,7 +15,7 @@ reviews:
     drafts: false
   path_filters:
     - '!**/*.md'
-    - '!**/*Test.fs'
+    - '!**/*Tests.fs'
     - '!**/*.fsproj'
 chat:
   auto_reply: true
