@@ -1,10 +1,11 @@
 module TisburyTreasureHunt
 
-open System
+open System.Globalization
 
 let getCoordinate (line: string * string) : string = snd line
 
-let convertCoordinate (coordinate: string) : int * char = (int coordinate[0] - 48, coordinate[1])
+let convertCoordinate (coordinate: string) : int * char =
+    (CharUnicodeInfo.GetDigitValue coordinate[0], coordinate[1])
 
 let compareRecords (azarasData: string * string) (ruisData: string * (int * char) * string) : bool =
     let azarasCoordinates = getCoordinate >> convertCoordinate <| azarasData
