@@ -20,4 +20,4 @@ let verse number =
     $"On the {day} day of Christmas my true love gave to me: {gifts}."
     
 let recite start stop =
-    seq {start .. stop} |> Seq.map verse |>Seq.toList
+    seq {start .. stop} |> Seq.map verse |> Seq.toList
