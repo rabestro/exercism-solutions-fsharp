@@ -1,24 +1,19 @@
 module ErrorHandling
 
-let handleErrorByThrowingException() = (failwith "Some exception")
+let handleErrorByThrowingException() = failwith "Some exception"
 
-let handleErrorByReturningOption input =
+let handleErrorByReturningOption (input: string) =
     try
         int input |> Some
     with _ -> None
 
-let handleErrorByReturningResult input =
+let handleErrorByReturningResult (input: string) =
     try
         int input |> Ok
     with _ -> Error "Could not convert input to integer"
 
-let bind switchFunction twoTrackInput =
-    match twoTrackInput with
-    | Ok x -> switchFunction x
-    | error -> error
+let bind switchFunction twoTrackInput = twoTrackInput |> Result.bind switchFunction
 
-let cleanupDisposablesWhenThrowingException (resource: System.IDisposable) =
-    try
-        failwith "Some exception"
-    finally
-        resource.Dispose()
+let cleanupDisposablesWhenThrowingException resource =
+    use _ = resource
+    failwith "Some exception"
