@@ -2,15 +2,15 @@ module ErrorHandling
 
 let handleErrorByThrowingException() = (failwith "Some exception")
 
-let handleErrorByReturningOption =
-    function
-    | "1" -> Some 1
-    | _ -> None
+let handleErrorByReturningOption input =
+    try
+        int input |> Some
+    with _ -> None
 
-let handleErrorByReturningResult =
-    function
-    | "1" -> Ok 1
-    | _ -> Error "Could not convert input to integer"
+let handleErrorByReturningResult input =
+    try
+        int input |> Ok
+    with _ -> Error "Could not convert input to integer"
 
 let bind switchFunction twoTrackInput =
     match twoTrackInput with
