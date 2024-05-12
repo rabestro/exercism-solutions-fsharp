@@ -1,41 +1,31 @@
 module CircularBuffer
 
-type CircularBuffer =
-    { buffer: int array
-      head: int ref
-      size: int ref }
+type CircularBuffer<'a> =
+    { items: 'a list
+      size: int }
 
-type CircularBuffer with
-    member this.write data =
-        this.buffer[ this.head.Value ] <- data
-        this.head.Value <- (this.head.Value + 1) % this.buffer.Length
-        this.size.Value <- min (this.size.Value + 1) this.buffer.Length
-        this
-        
-    member this.read() =
-        let index = (this.buffer.Length + this.head.Value - this.size.Value) % this.buffer.Length
-        this.size.Value <- this.size.Value - 1
-        this.buffer[index]
+type CircularBuffer<'a> with
+    member this.isFull() = this.items.Length = this.size
+    member this.append value = { this with items = this.items @ [ value ] }
+    member this.overwrite value = { this with items = this.items.Tail @ [ value ] }
 
 let mkCircularBuffer size =
-    { buffer = Array.create size 0
-      head = ref 0
-      size = ref 0 }
+    { items = []
+      size = size }
 
-let clear buffer =
-    buffer.size.Value <- 0
-    buffer
+let clear buffer = { buffer with items = [] }
 
-let write value buffer =
-    if buffer.size.Value = buffer.buffer.Length
-    then failwith "You need to implement this function."
-    else buffer.write value
+let write value (buffer: CircularBuffer<'a>) =
+    if buffer.isFull()
+    then failwith "Cannot write to full buffer"
+    else buffer.append value
 
-let forceWrite value (buffer: CircularBuffer) = buffer.write value
+let forceWrite value (buffer: CircularBuffer<'a>) =
+    if buffer.isFull()
+    then buffer.overwrite value
+    else buffer.append value
 
 let read buffer =
-    if buffer.size.Value = 0 then
-        failwith "Tried to read from empty buffer"
-        0, buffer
-    else 
-        buffer.read(), buffer
+    match buffer.items with
+    | [] -> failwith "Cannot read from empty buffer"
+    | x :: xs -> x, { buffer with items = xs }
