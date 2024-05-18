@@ -1,19 +1,24 @@
 module CollatzConjecture
 
 let (|Even|Odd|) number =
-    match number % 2 with
-    | 0 -> Even
-    | _ -> Odd
+     match number &&& 1UL with
+     | 1UL -> Odd
+     | _ -> Even
+     
+let private next number =
+    match number with
+    | Odd -> 3UL * number + 1UL
+    | Even -> number / 2UL
 
-let steps (number: int): int option =
-    let next number =
-        match number with
-        | Even -> number / 2
-        | Odd -> 3 * number + 1
+let private countSteps number =
+    let mutable current = (uint64 number)
+    let mutable count = 0
+    while current > 1UL do
+        count <- count + 1
+        current <- next current
+    count
 
-    let rec countStepsFor number: int =
-        match number with
-        | 1 -> 0
-        | _ -> 1 + countStepsFor (next number)
+let private verify number =
+    if number < 1 then None else Some number
 
-    if number < 1 then None else Some <| countStepsFor number
+let steps number: int option = verify number |> Option.map countSteps
