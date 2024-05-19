@@ -8,4 +8,4 @@ let convert (number: int): string =
     |> List.choose id
     |> function
     | [] -> string number
-    | sounds -> String.concat "" sounds
+    | sounds -> System.String.Concat sounds
